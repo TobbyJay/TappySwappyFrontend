@@ -82,6 +82,7 @@ async function postScore() {
             },
             body: JSON.stringify(payload)
         });
+        console.log(payload)
 
         if (!response.ok) {
             throw new Error('Network response was not ok');
@@ -121,3 +122,83 @@ document.getElementById('playButton').addEventListener('click', () => {
         handleTap(); // Handle tap if the game is active
     }
 });
+
+function getRandomAvatar() {
+    const avatars = [
+        'https://randomuser.me/api/portraits/men/1.jpg',
+        'https://randomuser.me/api/portraits/men/2.jpg',
+        'https://randomuser.me/api/portraits/men/3.jpg',
+        'https://randomuser.me/api/portraits/women/1.jpg',
+        'https://randomuser.me/api/portraits/women/2.jpg',
+        'https://randomuser.me/api/portraits/women/3.jpg'
+    ];
+    return avatars[Math.floor(Math.random() * avatars.length)];
+}
+    // Fetch leaderboard data
+    async function fetchLeaderboard() {
+        const url = "https://b036-102-89-33-60.ngrok-free.app/api/Game/leaderboard";
+        try {
+            const response = await fetch(url);
+            if (!response.ok) { // Check for 404 or other errors
+                throw new Error('Network response was not ok');
+            }
+            const data = await response.json();
+            
+            // Check if data is empty
+            if (!data || data.length === 0) {
+                return "No players found yet, start playing to be at the top."; // Return the message
+            }
+            console.log(data)
+            return data; // Adjust based on your API response structure
+        } catch (error) {
+            console.error('Error fetching leaderboard:', error);
+            return "No players found"; // Return the message on error
+        }
+    }
+
+    // Show leaderboard modal
+    document.getElementById('leaderboardButton').addEventListener('click', async () => {
+        const leaderboardData = await fetchLeaderboard();
+        const leaderboardList = document.getElementById('leaderboardList');
+        leaderboardList.innerHTML = ''; // Clear previous entries
+
+        // Check if the result is a string (the "No players found" message)
+        if (typeof leaderboardData === 'string') {
+            const messageDiv = document.createElement('div');
+            messageDiv.textContent = leaderboardData; // Display the message
+            messageDiv.style.textAlign = 'center'; // Center the text
+            messageDiv.style.fontSize = '1.5rem'; // Adjust font size if needed
+            messageDiv.style.marginTop = '20px'; // Add some margin
+            leaderboardList.appendChild(messageDiv);
+        } else {
+            leaderboardData.forEach(entry => {
+                const itemDiv = document.createElement('div');
+                itemDiv.className = 'leaderboard-item';
+                
+                const avatar = document.createElement('img');
+                avatar.src = getRandomAvatar();
+                avatar.alt = 'Avatar';
+                avatar.className = 'avatar';
+
+                const name = document.createElement('span');
+                name.className = 'leaderboard-name';
+                name.textContent = entry.firstName;
+
+                const score = document.createElement('span');
+                score.className = 'leaderboard-score';
+                score.textContent = `Score: ${entry.totalScore}`;
+
+                itemDiv.appendChild(avatar);
+                itemDiv.appendChild(name);
+                itemDiv.appendChild(score);
+                leaderboardList.appendChild(itemDiv);
+            });
+        }
+
+        document.getElementById('leaderboardModal').style.display = 'block'; // Show modal
+    });
+
+    // Close modal
+    document.querySelector('.close-button').addEventListener('click', () => {
+        document.getElementById('leaderboardModal').style.display = 'none';
+    });
