@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TappySwappy Game</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+
+</head>
+<body>
+    <div class="container">
+        <h1>TappySwappy!</h1>
+        
+        <!-- Leaderboard Button at the Top Right -->
+        <button id="leaderboardButton" class="leaderboard-button">Leaderboard</button>
+
+        <div class="game-area">
+            <div id="coins" class="score-display">
+                <svg xmlns="http://www.w3.org/2000/svg" class="coin-icon" viewBox="0 0 24 24" fill="gold">
+                    <circle cx="12" cy="12" r="10"/>
+                </svg>
+                <span id="coinCount" style="font-size: 2rem;">0</span>
+            </div>
+            
+            <!-- Lottie Animation as an iframe -->
+            <iframe src="https://lottie.host/embed/9ef95775-ffad-4a97-ad70-8472aac1c2fc/8h32uSVpu2.json" 
+                    style="width: 100px; height: 100px; margin: 20px auto; border: none;"></iframe>
+            
+            <div id="timer" class="timer-display" style="font-size: 1.5rem;">Time: <span id="timeRemaining">10</span></div>
+            <button class="play-button" id="playButton" style="font-size: 1.5rem;">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-hand-click" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                    <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+                    <path d="M12 21v-3" />
+                    <path d="M10 15h4" />
+                    <path d="M9 21h6" />
+                    <path d="M4 9h4l2 2" />
+                    <path d="M4 5h5l2 2" />
+                    <path d="M16 3l4 4" />
+                </svg>
+                Tap to Play!
+            </button>
+            <div id="finalToast" class="final-toast"></div> <!-- Final toast for game over -->
+        </div>
+        
+        <footer class="footer">
+            <p style="font-size: 1.2rem;">Made with ❤️ by Tobby</p>
+        </footer>
+    </div>
+
+    <!-- Leaderboard Modal -->
+    <div id="leaderboardModal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <span class="close-button">&times;</span>
+            <h2>Leaderboard</h2>
+            <ul id="leaderboardList" class="leaderboard-list"></ul>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+    <script>
+        // Fetch leaderboard data
+        async function fetchLeaderboard() {
+            const url = "https://fb64-102-89-33-60.ngrok-free.app/api/Game/leaderboard";
+            try {
+                const response = await fetch(url);
+                if (!response.ok) { // Check for 404 or other errors
+                    throw new Error('Network response was not ok');
+                }
+                const data = await response.json();
+                console.log(data)
+                return data; // Adjust based on your API response structure
+            } catch (error) {
+                console.error('Error fetching leaderboard:', error);
+                return generateRandomLeaderboardData(); // Return random data on error
+            }
+        }
+
+        // Generate random leaderboard data
+        function generateRandomLeaderboardData() {
+            const randomData = [];
+            for (let i = 1; i <= 5; i++) {
+                randomData.push({
+                    FirstName: `Player ${i}`,
+                    TotalScore: Math.floor(Math.random() * 100) // Random score between 0-99
+                });
+            }
+            return randomData;
+        }
+
+        // Generate random avatar URL
+        function getRandomAvatar() {
+            const avatars = [
+                'https://randomuser.me/api/portraits/men/1.jpg',
+                'https://randomuser.me/api/portraits/men/2.jpg',
+                'https://randomuser.me/api/portraits/men/3.jpg',
+                'https://randomuser.me/api/portraits/women/1.jpg',
+                'https://randomuser.me/api/portraits/women/2.jpg',
+                'https://randomuser.me/api/portraits/women/3.jpg'
+            ];
+            return avatars[Math.floor(Math.random() * avatars.length)];
+        }
+
+        // Show leaderboard modal
+        document.getElementById('leaderboardButton').addEventListener('click', async () => {
+            const leaderboardData = await fetchLeaderboard();
+            const leaderboardList = document.getElementById('leaderboardList');
+            leaderboardList.innerHTML = ''; // Clear previous entries
+
+            leaderboardData.forEach(entry => {
+                const li = document.createElement('li');
+                li.className = 'leaderboard-item';
+                
+                const avatar = document.createElement('img');
+                avatar.src = getRandomAvatar();
+                avatar.alt = 'Avatar';
+                avatar.className = 'avatar';
+
+                const name = document.createElement('span');
+                name.className = 'leaderboard-name';
+                name.textContent = entry.FirstName;
+
+                const score = document.createElement('span');
+                score.className = 'leaderboard-score';
+                score.textContent = `Score: ${entry.TotalScore}`;
+
+                li.appendChild(avatar);
+                li.appendChild(name);
+                li.appendChild(score);
+                leaderboardList.appendChild(li);
+            });
+
+            document.getElementById('leaderboardModal').style.display = 'block'; // Show modal
+        });
+
+        // Close modal
+        document.querySelector('.close-button').addEventListener('click', () => {
+            document.getElementById('leaderboardModal').style.display = 'none';
+        });
+    </script>
+</body>
+</html>

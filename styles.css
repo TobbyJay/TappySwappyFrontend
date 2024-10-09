@@ -1,0 +1,235 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Montserrat', sans-serif; /* Applied Montserrat font */
+    background-color: #f0f0f0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.container {
+    text-align: center;
+    padding: 20px;
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    width: 90%;
+    max-width: 400px;
+}
+
+h1 {
+    font-size: 2.5rem;
+    margin-bottom: 20px;
+    font-weight: 700; /* Bold title */
+}
+
+.game-area {
+    position: relative;
+    margin-bottom: 20px;
+}
+
+.score-display {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    margin-bottom: 15px;
+}
+
+.coin-icon {
+    width: 30px;
+    height: 30px;
+    margin-right: 10px;
+}
+
+.timer-display {
+    font-size: 1.5rem;
+    margin-bottom: 15px;
+}
+
+.play-button {
+    padding: 10px 20px;
+    font-size: 1.2rem;
+    background-color: #28a745;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+#playButton {
+    padding: 10px 20px;
+    font-size: 1.2rem;
+    background-color: #28a745;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    display: inline-block; /* Ensures the button can have width */
+    text-align: center;    /* Center the text */
+    margin: 0 auto;        /* Center the button itself in its container */
+}
+
+.play-button:hover {
+    background-color: #218838;
+}
+
+.final-toast {
+    display: none; /* Hidden by default */
+    margin-top: 20px;
+    font-size: 1.5rem;
+    color: #dc3545;
+}
+
+.toast {
+    display: none; /* Hidden by default */
+    margin-top: 20px;
+    font-size: 1.5rem;
+    color: #136cd1;
+}
+
+.footer {
+    margin-top: 20px;
+    font-size: 0.9rem;
+    color: #555;
+}
+
+/* Media Queries for Responsive Design */
+@media (max-width: 600px) {
+    h1 {
+        font-size: 2rem;
+    }
+
+    .score-display,
+    .timer-display {
+        font-size: 1.2rem;
+    }
+
+    .play-button {
+        font-size: 1rem;
+        padding: 8px 16px;
+    }
+
+    .coin-icon {
+        width: 24px;
+        height: 24px;
+    }
+}
+
+@keyframes coinAnimation {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.5); /* Scale up */
+        color: gold;           /* Change color for effect */
+    }
+    100% {
+        transform: scale(1);   /* Scale back down */
+        color: white;          /* Revert color */
+    }
+}
+
+#coinCount {
+    display: inline-block; /* Necessary for the animation to work */
+    transition: color 0.3s; /* Smooth color transition */
+}
+
+.animate {
+    animation: coinAnimation 0.5s ease; /* Apply animation */
+}
+
+.leaderboard-button {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    padding: 10px 20px;
+    font-size: 1.5rem;
+    background: linear-gradient(135deg, #ff0080, #ff8c00); /* Gradient color */
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s; /* Add a transform for hover effect */
+    box-shadow: 0 4px 20px rgba(255, 0, 128, 0.5); /* Shiny shadow */
+    text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.5); /* Text shadow for depth */
+}
+
+.leaderboard-button:hover {
+    background: linear-gradient(135deg, #ff8c00, #ff0080); /* Reverse gradient on hover */
+    transform: scale(1.05); /* Slightly enlarge on hover */
+}
+
+.modal {
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgba(0, 0, 0, 0.8); /* Black with opacity */
+}
+
+.modal-content {
+    background-color: #fff;
+    margin: 10% auto; /* Reduced margin for compactness */
+    padding: 15px; /* Reduced padding for compactness */
+    border: 1px solid #888;
+    width: 80%; /* Could be more or less, depending on screen size */
+}
+
+.close-button {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close-button:hover,
+.close-button:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.leaderboard-list {
+    list-style-type: none; /* Remove bullet points */
+    padding: 0;
+    margin: 10px 0; /* Reduced margin for compactness */
+}
+
+.leaderboard-item {
+    display: flex;
+    align-items: center;
+    padding: 5px; /* Reduced padding for compactness */
+    border-bottom: 1px solid #ddd;
+}
+
+.leaderboard-item:last-child {
+    border-bottom: none; /* Remove border from last item */
+}
+
+.avatar {
+    width: 30px; /* Reduced avatar size */
+    height: 30px; /* Reduced avatar size */
+    border-radius: 50%; /* Circular avatars */
+    margin-right: 10px; /* Reduced margin */
+}
+
+.leaderboard-name {
+    font-weight: bold;
+    margin-right: 5px; /* Reduced margin */
+}
+
+.leaderboard-score {
+    color: #555; /* Slightly muted color for scores */
+}
