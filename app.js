@@ -67,7 +67,7 @@ async function endGame() {
 
 // Function to post the score
 async function postScore() {
-    const url = "https://fb64-102-89-33-60.ngrok-free.app/api/Game/saveScore";
+    const url = "https://b036-102-89-33-60.ngrok-free.app/api/Game/saveScore";
     const payload = {
         Coins: coins,
         TelegramUserId: userId
