@@ -67,7 +67,7 @@ async function endGame() {
 
 // Function to post the score
 async function postScore() {
-    const url = "https://b036-102-89-33-60.ngrok-free.app/api/Game/saveScore";
+    const url = "https://tappyswappy.onrender.com/api/Game/saveScore";
     const payload = {
         Coins: coins,
         TelegramUserId: userId
@@ -136,7 +136,7 @@ function getRandomAvatar() {
 }
     // Fetch leaderboard data
     async function fetchLeaderboard() {
-        const url = "https://b036-102-89-33-60.ngrok-free.app/api/Game/leaderboard";
+        const url = "https://tappyswappy.onrender.com/api/Game/leaderboard";
         try {
             const response = await fetch(url);
             if (!response.ok) { // Check for 404 or other errors
@@ -148,13 +148,16 @@ function getRandomAvatar() {
             if (!data || data.length === 0) {
                 return "No players found yet, start playing to be at the top."; // Return the message
             }
-            console.log(data)
-            return data; // Adjust based on your API response structure
+    
+            // Return only the first 5 results
+            const topPlayers = data.slice(0, 5);
+            console.log(topPlayers);
+            return topPlayers; // Adjust based on your API response structure
         } catch (error) {
             console.error('Error fetching leaderboard:', error);
             return "No players found"; // Return the message on error
         }
-    }
+    }    
 
     // Show leaderboard modal
     document.getElementById('leaderboardButton').addEventListener('click', async () => {
